@@ -34,7 +34,7 @@ var effect = {
 			speed = speed > 0 ? Math.ceil(speed) : Math.floor(speed);
 			cur += speed;
 			attribute.set(obj,attr,cur);
-			console.log('opacity: '+obj.style.opacity + '  left: '+ obj.style.left+'  speed: '+speed);
+			//console.log('opacity: '+obj.style.opacity + '  left: '+ obj.style.left+'  speed: '+speed);
 			if(json[attr] == cur){
 				complete = true;
 				break;
