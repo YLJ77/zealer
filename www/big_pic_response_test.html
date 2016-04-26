@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script type="text/javascript" src="js/move.js"></script>
+	<link rel="stylesheet" href="css/reset.css">
+	<link rel="stylesheet" href="css/constant.css">
+	<style>
+		*{
+			padding:0;
+			margin:0;
+		}
+		.slider_box {
+		    height: 500px;
+		    position: relative;
+		    overflow: hidden;
+		}
+
+		.slider_box .slider_container {
+			width:1920px;
+		    position: absolute;
+		    left: 50%;
+		    margin-left: -960px;
+		    opacity:0;
+		}
+
+		.slider_box  div:first-child{
+			opacity:1;
+		}
+
+
+		.nav_arrow{
+			height:60px;
+			width:100%;
+			position: absolute;
+			top:0;
+			bottom:0;
+			margin:auto 0;
+		}
+
+		.nav_arrow div{
+			width:32px;
+			height:60px;
+			cursor:pointer;
+		}
+
+		.nav_arrow div:first-child{
+			background: url(img/slider_arrow.png) no-repeat;
+			background-position: 0 0;
+			overflow:hidden;
+			margin-left: 8px;
+		}
+
+		.nav_arrow div:last-child{
+			background: url(img/slider_arrow.png) no-repeat;
+			overflow:hidden;
+			background-position:-32px 0;
+			margin-right: 8px;
+		}
+
+		.slide_control{
+			width:230px;
+			height:20px;
+			left:0;
+			right:0;
+			bottom:11px;
+			position:absolute;
+			margin:0 auto;
+		}
+
+		.slide_control li{
+			width:30px;
+			height:0;
+			overflow:hidden;
+			cursor:pointer;
+			border-top:1px solid #fff;
+			border-bottom:1px solid #fff;
+			margin-top:9px;
+			opacity:.6;
+			box-sizing:border-box;
+			float:left;
+			margin-right: 10px;
+		}
+
+		.slide_control li:last-child{
+			margin-right: 0;
+		}
+
+		.slide_control li:hover{
+			height:20px;
+			border:1px solid #fff;
+			margin-top:0;
+			background: #000;
+			color:#fff;
+			text-align: center;
+			line-height:20px;
+		}
+
+		.slide_control .active{
+			border-color:#005aff;
+			text-align:center;
+			line-height: 19px;
+			color:#fff;
+		}
+
+
+	</style>
+</head>
+<body>
+		<div class="slider_box">
+			<div class="slider_container" >
+					<a href="#" target="_blank">
+						<img src="img/1.jpg">
+					</a>
+			</div>
+
+			<div class="slider_container" >
+					<a href="#" target="_blank">
+						<img src="img/2.jpg">
+					</a>
+			</div>
+
+			<div class="slider_container" >
+					<a href="#" target="_blank">
+						<img src="img/3.jpg">
+					</a>
+			</div>
+
+			<div class="slider_container" >
+					<a href="#" target="_blank">
+						<img src="img/4.jpg">
+					</a>
+			</div>
+
+			<div class="slider_container" >
+					<a href="#" target="_blank">
+						<img src="img/5.jpg">
+					</a>
+			</div>
+
+			<div class="slider_container" >
+					<a href="#" target="_blank">
+						<img src="img/6.jpg">
+					</a>
+			</div>
+
+			<div class="nav_arrow clear" id="arrow">
+				<div class="fl" id="l_arrow"></div>
+				<div class="fr" id="r_arrow"></div>
+			</div>
+			<ul class="slide_control clear" id="control">
+				<li class="active"><span>1</span></li>
+				<li><span>2</span></li>
+				<li><span>3</span></li>
+				<li><span>4</span></li>
+				<li><span>5</span></li>
+			</ul>
+		</div>
+
+		<script type="text/javascript">
+			function PicSlide(){
+				var list = document.getElementsByClassName('slider_container')
+				var control = document.getElementById('control').getElementsByTagName('li');
+				var l_arrow = document.getElementById('l_arrow');
+				var r_arrow = document.getElementById('r_arrow');
+
+				var self = this;
+				self.list = list;
+				self.control = control;
+				self.active = 0;
+
+				for(var i=0; i<control.length; i++){
+					control[i].index = i;
+					control[i].onmouseenter = function(){
+						if(self.active === this.index) return;
+						clearInterval(self.timer);
+						self.clear();
+						self.select(this);
+					}
+					control[i].onmouseleave = function(){
+						clearInterval(self.timer);
+						self.timer = setInterval(function(){self.run()},3000)
+					}
+				}
+
+				l_arrow.onclick = function(){
+					clearInterval(self.timer);
+					var active = self.active;
+					var control = self.control;
+					var list = self.list;
+					self.clear();
+					active = active > 0 ? active-1 : control.length - 1;
+					self.select(control[active]);
+					self.active = active;
+					self.timer = setInterval(function(){self.run()},3000);
+				}
+
+				r_arrow.onclick = function(){
+					clearInterval(self.timer);
+					var active = self.active;
+					var control = self.control;
+					var list = self.list;
+					self.clear();
+					active = active >= control.length - 1 ? 0 : active + 1;
+					self.select(control[active]);
+					self.active = active;
+					self.timer = setInterval(function(){self.run()},3000);
+				}
+
+				self.timer = setInterval(function(){self.run()},3000);
+			}
+
+			PicSlide.prototype = {
+				select:function(target){
+					this.active = target.index;
+					this.control[this.active].className = 'active';
+					effect.animate(this.list[target.index],{'opacity':100},30);
+				},
+				clear:function(){
+					this.control[this.active].className = "";
+					effect.animate(this.list[this.active],{'opacity':0},30);
+				},
+				run:function(){
+					var active = this.active;
+					var control = this.control;
+					var list = this.list;
+					this.clear();
+					active +=1;
+					active = active % control.length;
+					control[active].className = 'active';
+					effect.animate(list[active],{'opacity':100},30);
+					this.active = active;
+				}
+			}
+
+			new PicSlide();
+		</script>
+</body>
+</html>
