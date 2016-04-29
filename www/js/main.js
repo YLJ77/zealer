@@ -113,18 +113,52 @@
 
 			video_list[i].onmouseleave = function(){
 				var self = this;
-				var fn = function(){effect.animate(left_line[self.index],{'opacity':0},30);}
 				effect.animate(left_line[this.index],{'left':90,'opacity':0},30,function(){effect.animate(left_line[self.index],{'opacity':0},30);});
 				effect.animate(right_line[this.index],{'right':90,'opacity':0},30,function(){effect.animate(right_line[self.index],{'opacity':0},30);});
 				effect.animate(list_play[this.index],{'top':20,'opacity':0},30,function(){effect.animate(list_play[self.index],{'opacity':0},30);});
 			}
 		}
+
+		//left_line = null;
 		
+	}
+
+	flag = false;
+	function menu(){
+		var sel = document.getElementById('sel');
+		var options = document.getElementById('options');
+		var values = document.getElementsByClassName('des_select');
+		
+
+		sel.onclick = function(event){
+			event = event || window.event;
+			event.stopPropagation();
+			options.style.display = 'block';
+		}
+
+		sel.onblur = function(){
+			options.style.display = 'none';
+		}
+
+		for(var i=0;i<values.length;i++){
+			values[i].onclick = function(event){
+				event = event || window.event;
+				event.stopPropagation();
+				flag = true;
+				sel.innerText = this.innerText;
+				options.style.display = 'none';
+			}
+		}
+
+		document.onclick = function(){
+			options.style.display = 'none';
+		}
 	}
 
 	slide_nav();
 	new PicSlide();
 	play();
+	menu();
 }())
 
 
